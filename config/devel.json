@@ -1,0 +1,19 @@
+{
+  "soundMaxVol" : 1.0,
+  "eventDir" : "/media/pi/SOUND/events/",
+  "subnet" : "192.168.20",
+
+  "hosts" : [
+    {
+      "ip" : "192.168.20.144", 
+      "name": "devel", 
+      "isMaster" : true, 
+      "hasAudio" : true,
+      "hasScreen" : true,
+      "hasMusic" : true,
+      "displayEnabled" : true 
+    }
+  ],
+
+  "gardenServerPort": 8080
+}
