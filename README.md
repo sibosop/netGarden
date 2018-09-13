@@ -43,10 +43,11 @@ You still need to enable ssh from the terminal using
  * Load screensaver program (see below) disable in perferences
  * 
  
+ 
 #### setting up unit for run
  * To minimize the writes to the sd card, the image directories are being mounted tmpfs:
  * `sudo mv /etc/fstab /etc/fstab.old`
- * `sudo cp /home/pi/GitProjects/artDisplay/fstab /etc/fstab`
+ * `sudo cp /home/pi/GitProjects/netGarden/fstab /etc/fstab`
  * check the log file daily since the directory is now smaller, change weekly to daily
  * `sudo vi /etc/logrotate.conf`
  * to start at boot
