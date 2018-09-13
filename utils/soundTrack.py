@@ -74,8 +74,8 @@ def makeEventChoice(filenames):
   done = False
   while not done:
     if filenames is None:
-      syslog.syslog("eventdir ="+config.eventDir)
-      filenames = next(os.walk( config.eventDir))[2]
+      syslog.syslog("eventdir ="+config.specs['eventDir'])
+      filenames = next(os.walk( config.specs['eventDir']))[2]
     choice = random.choice(filenames)
     done = isWav(choice)
   return (choice,filenames)
@@ -113,7 +113,7 @@ class playEvent(threading.Thread):
         filenames=None
         vars = makeEventChoice(filenames)
         filenames = vars[1]
-        choice = config.eventDir+vars[0]
+        choice = config.specs['eventDir']+vars[0]
         syslog.syslog("soundTrack choice:"+choice)
         try:
           sound = pygame.mixer.Sound(file=choice)

@@ -41,7 +41,7 @@ def makeSpeakFile(line,language=''):
   if debug: syslog.syslog("make speak file:"+line+" lang:"+str(language))
 
   try:
-    if config.hasAudio() is False:
+    if host.getLocalAttr('hasAudio') is False:
       #if debug: syslog.syslog("speak: no audio");
       return rval
     fnameRoot = "../tmp/" + re.sub('\W+','_',line)

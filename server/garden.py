@@ -22,19 +22,6 @@ debug = True
 numGardenThreads=1
 gardenExit = 0
 
-masterFlag = None
-def isMaster():
-  global masterFlag
-  if masterFlag is None:
-    masterFlag = False
-    ip = subprocess.check_output(["hostname","-I"]).strip()
-    for h in config.specs['hosts']:
-      if debug: syslog.syslog("host:"+str(h)+" ip:"+ip)
-      if ip == h['ip']:
-        masterFlag = h['isMaster']
-        break
-  if debug: syslog.syslog("isMaster:"+str(masterFlag)) 
-  return masterFlag 
 eventThreads=[]
 def startEventThread(t):
   global eventThreads
@@ -44,13 +31,11 @@ def startEventThread(t):
 
 if __name__ == '__main__':
   try:
-    config.hasAudio = True
     pname = sys.argv[0]
     syslog.syslog(pname+" at "+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
     os.environ['DISPLAY']=":0.0"
     os.chdir(os.path.dirname(sys.argv[0]))
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--slp', action='store_true', help='use slp instead of config') 
+    parser = argparse.ArgumentParser() 
     parser.add_argument('-d','--debug', action = 'store_true',help='set debug')
     parser.add_argument('-c','--config',nargs=1,type=str,default=[config.defaultSpecPath],help='specify different config file')
     args = parser.parse_args()
@@ -59,7 +44,8 @@ if __name__ == '__main__':
   except Exception, e:
     syslog.syslog("config error:"+str(e))
     exit(5)
-  im =isMaster()
+  im =host.getLocalAttr('isMaster')
+  if debug: syslog.syslog("isMaster:"+str(im))
   sst = soundServer.soundServerThread(8080)
   sst.setDaemon(True)
   sst.start()

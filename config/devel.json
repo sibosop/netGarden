@@ -1,6 +1,7 @@
 {
   "soundMaxVol" : 1.0,
   "eventDir" : "/media/pi/SOUND/events/",
+  "utilsDir" : "../utils",
   "subnet" : "192.168.20",
 
   "hosts" : [

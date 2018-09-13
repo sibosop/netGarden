@@ -10,7 +10,7 @@ debug=True
 def upgrade():
   try:
     syslog.syslog("DOING UPGRADE")
-    os.chdir(config.progDir)
+    os.chdir(config.specs['utilsDir'])
     cmd = ['git','pull','--quiet','origin','master']
     output = check_output(cmd)
     if debug: syslog.syslog(output)
@@ -18,5 +18,7 @@ def upgrade():
     syslog.syslog("player error: "+repr(e))
 
 if __name__ == '__main__':
+  os.chdir(os.path.dirname(sys.argv[0]))
+  config.load()
   upgrade()
   #setVolume(sys.argv[1])

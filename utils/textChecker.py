@@ -10,7 +10,7 @@ debug = False
       
 textExt = ".lkp"
 def getText():
-  filenames = next(os.walk( config.imageDir))[2]
+  filenames = next(os.walk( config.specs[imageDir]))[2]
   for f in filenames:
     if debug:
       syslog.syslog( "filename:"+f )
@@ -24,7 +24,7 @@ def getText():
     if flag == textExt:  
       if debug:
           syslog.syslog("found text file:"+f)
-      path =  config.imageDir + "/" + f
+      path =  config.specs['imageDir'] + "/" + f
       lines = open(path).read().split('\n')
       if len(lines) > 1:
         config.mutex.acquire()

@@ -10,15 +10,17 @@ import sys
 import json
 import urllib2
 import config
+import syslog
 
 useSlp = False
 hosts = []
 names = []
+specs = {}
 timeout = 2
-debug=False
+debug=True
 def setHostList():
   global hosts
-  if debug: print "getting host from specs"
+  if debug: syslog.syslog( "getting host from specs" )
   if config.specs == None:
     config.load()
   if len(hosts) == 0:
@@ -125,6 +127,32 @@ def isLocalHost(ip):
   if debug: syslog.syslog("isLocalHost is False:"+ip)
   return False
 
+def getLocalHost():
+  subnet = config.specs['subnet']
+  ipList = subprocess.check_output(["hostname","-I"]).split()
+  for ip in ipList:
+    if subnet in ip:
+      if debug: syslog.syslog("local host:"+ip)
+      return ip
+  return None
+  
+def getHost(ip):
+    getHosts()
+    for h in hosts:
+      if h['ip'] == ip:
+        return h
+    syslog.syslog("Can't find ip"+ip)
+    return None
+    
+def getAttr(ip,a):
+  rval = getHost(ip)[a]
+  if debug: syslog.syslog("Get Attr "+a+":"+str(rval))
+  return rval 
+  
+def getLocalAttr(a):
+  rval = getHost(getLocalHost())[a]
+  if debug: syslog.syslog("Get Local Attr "+a+":"+str(rval))
+  return rval
 
 if __name__ == '__main__':
   run=True
@@ -135,4 +163,4 @@ if __name__ == '__main__':
   printHostList()
   for h in hosts:
     if isLocalHost(h['ip']):
-      print h['ip'],"is local host"
+      syslog.syslog (h['ip']+"is local host")

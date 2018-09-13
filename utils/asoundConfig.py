@@ -2,6 +2,9 @@
 import syslog
 import os
 import sys
+home = os.environ['HOME']
+sys.path.append(home+"/GitProjects/netGarden/config")
+sys.path.append(home+"/GitProjects/netGarden/utils")
 from subprocess import CalledProcessError, check_output
 home = os.environ['HOME']
 import config
@@ -80,10 +83,9 @@ def getHw():
   
 
 def makeRc():
-  path = config.sharedDir+"/asoundrc.template"
+  path = config.specs['utilsDir']+"/asoundrc.template"
   rcPath = home+"/.asoundrc"
   try:
-    if debug: syslog.syslog("HOME="+home+" Prog="+config.progDir)
     rc = open(rcPath,"w")
     hw = getHw()
     with open(path) as f:
@@ -161,6 +163,8 @@ def getVolume():
   return vol
 
 if __name__ == '__main__':
+  os.chdir(os.path.dirname(sys.argv[0]))
+  config.load()
   makeRc()
   #setVolume(sys.argv[1])
   #print getVolume()
