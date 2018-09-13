@@ -8,9 +8,28 @@ The laster versions of the pi make setup much easier. Password and network setup
 You still need to enable ssh from the terminal using
 * `sudo raspi-config`
 
+#### move to small screen
+* configure small screen (hdmi_drive=1 has been added here to remove purple line on left side of screen which
+* began to appear on versions after 3/01/2017)
+  * `sudo vi /boot/config.txt`
+  * add lines
+     * `hdmi_force_hotplug=1`
+     * `hdmi_group=2`
+     * `hdmi_mode=1`
+     * `hdmi_drive=1`
+     * `hdmi_mode=87`
+     * `hdmi_cvt 800 480 60 6 0 0 0`
+* if using large screen then
+  * add lines 
+    * `hdmi_force_hotplug=1`
+    * `hdmi_group=2`
+    * `hdmi_mode=1`
+    * `hdmi_drive=1`
+    * `hdmi_mode=82`
 * if the HDMI screen does not fill out to the edges then
 * uncomment this line
   * disable_overscan=1
+    
     
 * turn off screen blanking
  * vi /home/pi/.config/lxsession/LXDE-pi/autostart 
