@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+import sys
+import os
+home = os.environ['HOME']
+sys.path.append(home+"/GitProjects/netGarden/config")
+sys.path.append(home+"/GitProjects/netGarden/utils")
+
 import textChecker
 import pygame
 import sys
