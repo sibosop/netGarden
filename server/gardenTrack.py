@@ -33,7 +33,7 @@ def play(cmd):
     r = l
     soundTrack.playSound(sound,l,r)
   except Exception as e:
-    syslog.syslog(self.name+": error on "+path+":"+str(e))
+    syslog.syslog("Play: error on "+path+":"+str(e))
     rval = "Fail"
   return "rval"
 
