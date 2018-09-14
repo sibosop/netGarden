@@ -18,7 +18,7 @@ def upgrade():
     output = check_output(cmd)
     if debug: syslog.syslog(output)
   except Exception, e:
-    syslog.syslog("player error: "+repr(e))
+    syslog.syslog("upgrade error: "+repr(e))
 
 if __name__ == '__main__':
   os.chdir(os.path.dirname(sys.argv[0]))

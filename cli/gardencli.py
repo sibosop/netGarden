@@ -137,7 +137,6 @@ cmds = {
       ,'Poweroff' : doCmd
       ,'Reboot'   : doCmd
       ,'Upgrade'  : doCmd
-      ,'PhraseScatter' : doPhrase
       ,'MaxEvents' : doNum
       ,'SoundVol': doNum
       ,'CollectionList' : doMasterCmd
