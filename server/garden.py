@@ -21,6 +21,11 @@ import subprocess
 debug = True
 numGardenThreads=1
 gardenExit = 0
+isMasterFlag = False;
+
+def isMaster():
+  global isMasterFlag
+  return isMasterFlag
 
 eventThreads=[]
 def startEventThread(t):
@@ -44,8 +49,8 @@ if __name__ == '__main__':
   except Exception, e:
     syslog.syslog("config error:"+str(e))
     exit(5)
-  im =host.getLocalAttr('isMaster')
-  if debug: syslog.syslog("isMaster:"+str(im))
+  isMasterFlag =host.getLocalAttr('isMaster')
+  if debug: syslog.syslog("isMaster:"+str(isMaster))
   sst = soundServer.soundServerThread(8080)
   sst.setDaemon(True)
   sst.start()
@@ -54,7 +59,7 @@ if __name__ == '__main__':
   speakThread = gardenSpeak.gardenSpeakThread()
   speakThread.setDaemon(True)
   speakThread.start()
-  if im:
+  if isMasterFlag:
     syslog.syslog("starting player")
     pt = player.playerThread()
     pt.setDaemon(True)
