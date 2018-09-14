@@ -4,7 +4,7 @@ import os
 home = os.environ['HOME']
 sys.path.append(home+"/GitProjects/netGarden/config")
 sys.path.append(home+"/GitProjects/netGarden/utils")
-
+import config
 import textChecker
 import pygame
 import sys
