@@ -50,7 +50,7 @@ if __name__ == '__main__':
     syslog.syslog("config error:"+str(e))
     exit(5)
   isMasterFlag =host.getLocalAttr('isMaster')
-  if debug: syslog.syslog("isMaster:"+str(isMaster))
+  if debug: syslog.syslog("isMaster:"+str(isMasterFlag))
   sst = soundServer.soundServerThread(8080)
   sst.setDaemon(True)
   sst.start()
