@@ -3,7 +3,8 @@ import syslog
 import os
 import sys
 home = os.environ['HOME']
-sys.path.append(home+"/GitProjects/netGarden/cli")
+sys.path.append(home+"/GitProjects/netGarden/config")
+import config
 from subprocess import CalledProcessError, check_output
 home = os.environ['HOME']
 sys.path.append(home+"/GitProjects/netGarden")
