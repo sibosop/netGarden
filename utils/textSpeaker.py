@@ -8,6 +8,7 @@ import os
 import wave
 import audioop
 import re
+import host
 from gtts import gTTS
 from pydub import AudioSegment
 debug = True
