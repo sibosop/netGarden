@@ -84,7 +84,7 @@ def doPlay(cmd):
   
 
 
-langFile = home+"/GitProjects/artDisplay/lists/lang_codes.json"
+langFile = home+"/GitProjects/netGarden/config/lang_codes.json"
 langs=[]
 def getLangs():
   global langs
