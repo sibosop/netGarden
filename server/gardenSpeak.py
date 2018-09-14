@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
-home = os.environ['HOME']
 import sys
+home = os.environ['HOME']
 sys.path.append(home+"/GitProjects/netGarden/cli")
 import soundTrack
 import threading
