@@ -15,6 +15,8 @@ while true; do
     ;;
     5) logger doing stop; exit 0
     ;;
+    6) logger doing restart
+    ;;
     *)
     ;;
   esac

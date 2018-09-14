@@ -66,6 +66,8 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       os._exit(4)
     if s['status'] == "stop":
       os._exit(5)
+    if s['status'] == "restart":
+      os._exit(6)
     return
 
 class soundServer(BaseHTTPServer.HTTPServer):
