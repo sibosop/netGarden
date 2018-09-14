@@ -41,7 +41,7 @@ You still need to enable ssh from the terminal using
  * set `BLANK_TIME=0`
  * set `POWERDOWN_TIME=0`
  * Load screensaver program (see below) disable in perferences
- * 
+ * unclutter removes cursor. You may need to run `unclutter -display :0.0` once
  
  
 #### setting up unit for run
