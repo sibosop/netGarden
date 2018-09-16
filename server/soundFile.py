@@ -5,8 +5,8 @@ import os
 import sys
 home = os.environ['HOME']
 sys.path.append(home+"/GitProjects/netGarden/config")
+sys.path.append(home+"/GitProjects/netGarden/collections")
 import glob
-import soundTrack
 import random
 import syslog
 import copy
@@ -15,21 +15,16 @@ import json
 import soundServer
 import shutil
 import config
+import copy
 
 debug=True
 listMutex=threading.Lock()
 maxEvents = 2
 
-
-rows = ['name','enabled','maxVol']
-FileEntry=collections.namedtuple('FileEntry',rows)
-
-fileCollections = {}
-fileList=collections.OrderedDict();
+fileCollections = None
 
 Gedir = ""
-defaultKey = "EventCtrl.csv"
-eventKey = defaultKey
+defaultKey = "full.json"
 currentCollection = defaultKey
 eventFile = ""
 
@@ -38,15 +33,20 @@ def getEdir():
   if Gedir == "":
     Gedir = config.specs['eventDir']
   return Gedir
-
-
+  
+Gcdir = ""
+def getCdir():
+  global Gcdir
+  if Gcdir == "":
+    Gcdir = config.specs['collDir']
+  return Gcdir
 
 def setMaxEvents(m):
   global maxEvents
   test = int(m)
   if test > 0:
     maxEvents = test
-  if debug: syslog.syslog("setMaxEvents maxEvents:"+str(maxEvents))
+  if debug: print("setMaxEvents maxEvents:"+str(maxEvents))
   status = { 'status' : 'ok' }
   rval = json.dumps(status)
   return rval 
@@ -57,158 +57,62 @@ def getCurrentCollection():
 
 def getFileCollections():
   global fileCollections
-  global fileList
-  csvFiles = glob.glob(getEdir()+"/*.csv")
-  if debug: syslog.syslog("csvFiles:"+str(csvFiles))
-  for cf in csvFiles:
-    n = cf.split("/")[-1]
-    if debug: syslog.syslog("collection file:"+n)
-    if ( cf == eventFile ):
-      fileCollections[n] = fileList
-    else:
+  if debug: print ("getFileCollections")
+  if fileCollections == None:
+    fileCollections = {}
+    collFiles = glob.glob(getCdir()+"/*.json")
+    if debug: print("collFiles:"+str(collFiles))
+    for cf in collFiles:
+      n = cf.split("/")[-1]
+      if debug: print("collection file:"+n)
       try:
-        if debug: syslog.syslog("reading:"+cf)
-        with open(cf,"r") as f:
-          reader = csv.reader(f)
-          fList=collections.OrderedDict();
-          e = collections.namedtuple("FileEntry",next(reader))
-          for data in map(e._make, reader):
-            fList[data.name] = data
-          fileCollections[n] = fList;
+        if debug: print("reading:"+cf)
+        specs = None
+        with open(cf) as f:
+          fileCollections[n] = json.load(f)
+          #if debug: print ("n="+str(fileCollections[n]))
       except IOError: 
-        syslog.syslog("can't open:"+cf);
+        print("can't open:"+cf);
+    for k in fileCollections.keys():
+      if debug: print("collection: %s"%(fileCollections[k]['desc']))
       
 
 def getCollectionList():
   global fileList
   global fileCollections
-  if debug: syslog.syslog("getCollectionList")
-  flen = len(fileList)
-  if flen == 0:
-    createFileList()
-    flen = len(fileList)
-  collections = [];
+  if debug: print("getCollectionList")
+  getFileCollections()
+  collections = []
   for k in sorted(fileCollections.keys()):
-      if debug: syslog.syslog("found collection:"+str(k))
-      collections.append(k)
+    if debug: print("found collection:"+str(k))
+    collections.append(k)
   status = { 'status' : 'ok' , 'collections' : collections }
   rval = json.dumps(status)
-  #if debug: syslog.syslog("getSoundList():"+rval)
+  #if debug: print("getSoundList():"+rval)
   return rval 
 
 def setCurrentCollection(col):
   global currentCollection
   global filecollections
-  syslog.syslog("setting current collection to:"+col);
+  getFileCollections()
+  print("setting current collection to:"+col);
   status = { 'status' : 'ok' }
   if col in fileCollections.keys():
     currentCollection = col
   else:
     status['status'] = "fail"
   rval = json.dumps(status)
-  if debug: syslog.syslog("setCurrentCollection():"+rval)
+  if debug: print("setCurrentCollection():"+rval)
   return rval 
 
-
-def refresh():
-  global fileList
-  listMutex.acquire()
-  fileList=collections.OrderedDict();
-  listMutex.release()
-  rval = True
-  try:
-    if debug: syslog.syslog("reading:"+eventFile)
-    with open(eventFile,"r") as f:
-      reader = csv.reader(f)
-      e = collections.namedtuple("FileEntry",next(reader))
-      for data in map(e._make, reader):
-        listMutex.acquire()
-        fileList[data.name] = data
-        listMutex.release()
-  except IOError: 
-    syslog.syslog("can't open:"+eventFile);
-    rval = False
+def getRatios(tunings,name):
+  if debug: print("get tuning: %s"%(name))
+  rval = None
+  if name in tunings:
+    rval = []
+    for t in tunings[name]:
+      rval.append(eval(t))
   return rval
-
-def rescan():
-  global fileList
-  listMutex.acquire()
-  files = glob.glob(getEdir()+"/*.wav")
-  newList=collections.OrderedDict();
-  for f in files:
-    n = f.split("/")[-1]
-    if n in fileList:
-      newList[n]=fileList[n]
-    else:
-      fe = FileEntry(name=n, enabled="1", maxVol=soundTrack.eventMaxVol)
-      newList[n] = fe
-  fileList = copy.deepcopy(newList)
-  try:
-    if debug: syslog.syslog("writing:"+eventFile)
-    with open(eventFile,'w') as f:
-      w = csv.writer(f)
-      w.writerow(rows)
-      w.writerows([(d.name, d.enabled, d.maxVol) for d in sorted(fileList.values())])
-  except IOError: 
-    syslog.syslog("can't open for write:"+eventFile);
-  listMutex.release()
-  getFileCollections()
-
-def createFileList():
-  if refresh() is False:
-    rescan()
-  else:
-    getFileCollections()
-
-      
-def getSoundList():
-  global fileList
-  if debug: syslog.syslog("getSoundList")
-  flen = len(fileList)
-  if flen == 0:
-    createFileList()
-    flen = len(fileList)
-  sounds = [];
-  for k in sorted(fileList.keys()):
-      s = { 'name' : fileList[k].name 
-          , 'enabled' : fileList[k].enabled
-          , 'maxVol' : fileList[k].maxVol }
-      sounds.append(s)
-  status = { 'status' : 'ok' , 'sounds' : sounds }
-  rval = json.dumps(status)
-  #if debug: syslog.syslog("getSoundList():"+rval)
-  return rval 
-
-def saveFileList():
-  global fileList
-  global eventFile
-  global rows
-
-  tmpFile = getEdir() + "/tmpfile.csv"
-  try:
-    with open(tmpFile,'w') as f:
-      w = csv.writer(f)
-      w.writerow(rows)
-      w.writerows([(d.name, d.enabled, d.maxVol) for d in fileList.values()])
-    shutil.move(tmpFile,eventFile)
-  except Exception, e: 
-    syslog.syslog("saveFile error"+repr(str(e)));
-
-
-def setSoundEnable(name,v):
-  global fileList
-  status = "fail"
-  val = "0"
-  if debug: syslog.syslog("setSoundEnable:"+name+" "+v)
-  if name in fileList:
-    if v == "True":
-      val = "1"
-    if debug: syslog.syslog("current:"+name+":"+str(fileList[name].enabled))
-    item = fileList[name]
-    fileList[name] = FileEntry(item.name,val,item.maxVol)
-    saveFileList();
-    status = "ok"
-  return soundServer.jsonStatus(status)
 
 
 def getSoundEntry():
@@ -217,48 +121,72 @@ def getSoundEntry():
   global currentCollection
   global fileCollections
   global eventFile
+  getFileCollections()
   edir = getEdir()
-  flen = len(fileList)
-  if flen == 0:
-    createFileList()
-    flen = len(fileList)
-  keys = fileCollections[currentCollection].keys()
-  if debug: syslog.syslog("currentCollection:"+currentCollection+" number of keys:"+str(len(keys)))
+  cc = fileCollections[currentCollection]
+  sounds = cc['sounds']
+  if debug: print("current collection:"+cc['desc']+" number of sounds:"+str(len(sounds)))
   done = False
   choice = 0
-  if currentCollection == defaultKey:
-    choices = 0
-    numChoices = random.randint(1,maxEvents)
-    if debug: syslog.syslog("default collection:"+currentCollection+" number of choices:"+str(numChoices)+" max Events:"+str(maxEvents))
-    rval = []
-    while choices < numChoices:
-      choice = random.randint(0,len(keys)-1)
-      if fileCollections[currentCollection][keys[choice]].enabled == "1":
-        choices += 1
-        rval.append(fileCollections[currentCollection][keys[choice]].name)
-        if debug: syslog.syslog("default collection rval:"+str(rval))
-    return rval
-  while not done:
-    choice = random.randint(0,len(keys)-1)
-    if fileCollections[currentCollection][keys[choice]].enabled == "1":
-      done = True
-  return fileCollections[currentCollection][keys[choice]].name.split('&')
+  numChoices = random.randint(1,maxEvents)
+  if debug: print("current collection:"+cc['desc']+" number of choices:"+str(numChoices)+" max Events:"+str(maxEvents))
+  rval = []
+  choiceList=[]
+  while len(rval) < numChoices:
+    choice = random.randint(0,len(sounds)-1)
+    if choice in choiceList:
+      continue
+    choiceList.append(choice)
+    sound = copy.deepcopy(sounds[choice])
+    for k in cc.keys():
+      if k == 'sounds':
+        continue
+      if k == 'tunings' or k == 'octaves':
+        continue
+      if k not in sound:
+        if k == 'tuning':
+          t = getRatios(cc['tunings'],cc['tuning'])
+          if t is not None:
+            sound[k] = t
+        if k == 'octave':
+          t = getRatios(cc['octaves'],cc['octave'])
+          if t is not None:
+            sound[k] = t
+        else:
+          sound[k] = cc[k]
+    for k in sound.keys():
+      if k == 'tuning':
+        t = getRatios(cc['tunings'],sound['tuning'])
+        if t is None:
+          del sound[k]
+        else:
+          sound[k] = t
+        if k == 'octave':
+          t = getRatios(cc['octaves'],sound['octave'])
+          if t is None:
+            del sound[k]
+          else:
+            sound[k] = t
+    rval.append(sound)
+    if debug: print "len(rval) %d numChoices %d" % (len(rval),numChoices)
+  if debug: print("collection rval:"+str(rval))
+  return rval
   
 
 
 if __name__ == '__main__':
-  for x in range(0,10):
+  config.load()
+  for x in range(0,4):
+    print "choice %d"%(x)
     entry = getSoundEntry()
     print entry
-  rescan()
-  for x in range(0,10):
+    print
+    print
+  setCurrentCollection("joyclouds.json")
+  for x in range(0,4):
+    print "choice %d"%(x)
     entry = getSoundEntry()
     print entry
-  getFileCollections()
-  fcKeys = fileCollections.keys()
-  for f in fcKeys:
-    print f
-    ekeys = fileCollections[f].keys()
-    for k in ekeys:
-      print fileCollections[f][k]
+    print
+    print
 

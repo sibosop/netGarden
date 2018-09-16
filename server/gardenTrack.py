@@ -18,8 +18,7 @@ import config
 debug = False
 currentSound = {'file':""}
 soundMinVol = 0.1
-speedChangeMax = 4.0
-speedChangeMin = .25
+
 volLock = threading.Lock()
 soundMaxVolume=.4
 
@@ -76,39 +75,24 @@ def getCurrentSound():
   soundTrack.eventMutex.release()
   return rval[0:n]
 
-def doJpent():
-  rval = ((speedChangeMax-speedChangeMin) 
-                        * random.random()) + speedChangeMin
-  syslog.syslog("doJpent")
-  return rval
 
-tunings = {
-  'jpent' : [1.0,32.0/27.0,4.0/3.0,3.0/2.0,16.0/9.0]
-  ,'bfarabi' : [1.0,9.0/8.0,45.0/32.0,131.0/90.0,3.0/2.0,15.0/8.0,31.0/16.0]
-  ,'sheng' : [1.0,8.0/7.0,6.0/5.0,5.0/4.0,3.0/2.0,5.0/3.0]
-  ,'joy' : [1.0,9.0/8.0,5.0/4.0,3.0/2.0,5.0/3.0,15.0/8.0]
-}
+defOctaves = [0.25,0.5,1.0,2.0,4.0]
+speedChangeMax = 4.0
+speedChangeMin = .25
 
-octaves = [0.25,0.5,1.0,2.0,4.0]
-
-def getFactor(path):
+def getFactor(spec):
   rval = 1.0
-  try:
-    pos = path.find("__");
-    if pos == -1:
-      raise NameError
-    epos = path.find(".",pos)
-    if pos == -1:
-      raise NameError
-
-    tuning = path[pos+2:epos]
-    syslog.syslog("tuning:"+tuning);
-    if tuning not in tunings:
-      syslog.syslog("bad tuning:"+tuning)
-      raise NameError
-    rval = random.choice(tunings[tuning]) * random.choice(octaves)
-  except NameError as exp:
-    syslog.syslog("default tuning for path:"+path)
+  if 'tuning' in spec:
+    if debug: syslog.syslog("tuning:"+str(spec['tuning']))
+    rval = random.chose(spec['tuning'])
+    if 'octave' in spec:
+      rval *= random.choice(spec['octave'])
+    else:
+      rval *= random.choice(defOctaves)
+  elif 'range' in spec:
+    rval = ((spec['range'][1]-spec['range'][0]) * random.random()) + spec['range'][0]
+  else:
+    if debug: syslog.syslog("default tuning")
     rval = ((speedChangeMax-speedChangeMin) * random.random()) + speedChangeMin
   syslog.syslog("factor:"+str(rval))
   return rval
@@ -155,7 +139,7 @@ class gardenTrack(threading.Thread):
         if debug: syslog.syslog(self.name+": playing:"+path);
         sound = pygame.mixer.Sound(file=path)
 	
-        factor = getFactor(path);
+        factor = getFactor(currentSound);
         nsound = soundTrack.speedx(sound,factor)
         if nsound is not None:
           sound = nsound

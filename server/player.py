@@ -61,13 +61,13 @@ class playerThread(threading.Thread):
             continue
           if host.isLocalHost(ip):
             if debug: syslog.syslog("sending "+choice+" request to localhost("+ip+")")
-            gardenTrack.setCurrentSound({'file' : choice})
+            gardenTrack.setCurrentSound(choice)
           else:
             if debug: syslog.syslog("sending "+choice+" request to "+ip)
             try:
               url = "http://"+ip+":8080"
               if debug: syslog.syslog("url:"+url)
-              cmd = { 'cmd' : "Sound" , 'file' : choice }
+              cmd = { 'cmd' : "Sound" ,'args' : choice }
               req = urllib2.Request(url
                       ,json.dumps(cmd),{'Content-Type': 'application/json'})
               timeout = 4

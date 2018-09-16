@@ -1,0 +1,61 @@
+{
+  "desc" : "Using Harrison's joyous procession",
+  "tunings" : {
+    "jpent" : ["1.0","32.0/27.0","4.0/3.0","3.0/2.0","16.0/9.0"],
+    "bfarabi" : ["1.0","9.0/8.0","45.0/32.0","131.0/90.0","3.0/2.0","15.0/8.0","31.0/16.0"],
+    "sheng" : ["1.0","8.0/7.0","6.0/5.0","5.0/4.0","3.0/2.0","5.0/3.0"],
+    "joy" : ["1.0","9.0/8.0","5.0/4.0","3.0/2.0","5.0/3.0","15.0/8.0"]
+  },
+  "tuning" : "joy",
+	"sounds": [{
+		"file": "rev_horn__joy.wav"
+	}, {
+		"file": "tuna4__sheng.wav"
+	}, {
+		"file": "rancan__joy.wav"
+	}, {
+		"file": "gen1__joy.wav"
+	}, {
+		"file": "lowPluck__sheng.wav"
+	}, {
+		"file": "p2__joy.wav"
+	}, {
+		"file": "p3__joy.wav"
+	}, {
+		"file": "lowPluck__joy.wav"
+	}, {
+		"file": "bongsaw2__joy.wav"
+	}, {
+		"file": "TwoPluck__sheng.wav"
+	}, {
+		"file": "delay_harm__joy.wav"
+	}, {
+		"file": "harp__joy.wav"
+	}, {
+		"file": "TwoPluck__joy.wav"
+	}, {
+		"file": "delay__joy.wav"
+	}, {
+		"file": "viol__joy.wav"
+	}, {
+		"file": "viol__sheng.wav"
+	}, {
+		"file": "guitar__joy.wav"
+	}, {
+		"file": "risset1__sheng.wav"
+	}, {
+		"file": "bongsaw__joy.wav"
+	}, {
+		"file": "horn__joy.wav"
+	}, {
+		"file": "tuna5__joy.wav"
+	}, {
+		"file": "celeste__joy.wav"
+	}, {
+		"file": "TwoP__joy.wav"
+	}, {
+		"file": "clanky__joy.wav"
+	}, {
+		"file": "p1__joy.wav"
+	}]
+}

@@ -88,8 +88,6 @@ class soundServer(BaseHTTPServer.HTTPServer):
       ,'Manual'   : self.setPlayMode
       ,'Refresh'  : self.doRefresh
       ,'Rescan'   : self.doRescan
-      ,'SoundList': self.doSoundList
-      ,'SoundEnable' : self.doSoundEnable
       ,'CollectionList': self.doCollectionList
       ,'Collection' : self.doCollection
       ,'PhraseScatter' : self.doPhraseScatter
@@ -185,10 +183,9 @@ class soundServer(BaseHTTPServer.HTTPServer):
 
   def doSoundEnable(self,cmd):
     return soundFile.setSoundEnable(cmd['args'][0],cmd['args'][1])
-  def doSoundList(self,cmd):
-    return soundFile.getSoundList();
+  
   def doSound(self,cmd):
-    return gardenTrack.setCurrentSound(cmd)
+    return gardenTrack.setCurrentSound(cmd['args'])
 
   def doCollectionList(self,cmd):
     return soundFile.getCollectionList()
@@ -226,20 +223,6 @@ class soundServer(BaseHTTPServer.HTTPServer):
     rval = jsonStatus("not_master")
     if garden.isMaster():
       player.enable(cmd['cmd'] == "Auto")
-      rval = jsonStatus("ok")
-    return rval
-
-  def doRefresh(self,cmd):
-    rval = jsonStatus("not_master")
-    if garden.isMaster():
-      soundFile.refresh()
-      rval = jsonStatus("ok")
-    return rval
-
-  def doRescan(self,cmd):
-    rval = jsonStatus("not_master")
-    if garden.isMaster():
-      soundFile.rescan()
       rval = jsonStatus("ok")
     return rval
 
