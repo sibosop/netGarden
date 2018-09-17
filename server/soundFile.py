@@ -25,7 +25,7 @@ fileCollections = None
 
 Gedir = ""
 defaultKey = "full.json"
-currentCollection = defaultKey
+currentCollection = None
 eventFile = ""
 
 def getEdir():
@@ -78,6 +78,8 @@ def getFileCollections():
     for k in fileCollections.keys():
       if debug: syslog.syslog("collection: %s"%(fileCollections[k]['desc']))
       
+  if currentCollection == None:
+    currentCollection = fileCollections[defaultKey]
 
 def getCollectionList():
   global fileList
@@ -100,7 +102,7 @@ def setCurrentCollection(col):
   syslog.syslog("setting current collection to:"+col);
   status = { 'status' : 'ok' }
   if col in fileCollections.keys():
-    currentCollection = col
+    currentCollection = fileCollections[col]
   else:
     status['status'] = "fail"
   rval = json.dumps(status)
