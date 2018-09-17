@@ -59,6 +59,7 @@ def getCurrentCollection():
 
 def getFileCollections():
   global fileCollections
+  global currentCollection
   if debug: syslog.syslog ("getFileCollections")
   if fileCollections == None:
     fileCollections = {}
