@@ -25,11 +25,13 @@ isMasterFlag = False;
 
 def isMaster():
   global isMasterFlag
+  if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
   return isMasterFlag
 
 eventThreads=[]
 def startEventThread(t):
   global eventThreads
+  global isMasterFlag
   eventThreads.append(t)
   eventThreads[-1].setDaemon(True)
   eventThreads[-1].start()
@@ -50,7 +52,7 @@ if __name__ == '__main__':
     syslog.syslog("config error:"+str(e))
     exit(5)
   isMasterFlag =host.getLocalAttr('isMaster')
-  if debug: syslog.syslog("isMaster:"+str(isMasterFlag))
+  if debug: syslog.syslog("isMaster: %s"+isMasterFlag)
   sst = soundServer.soundServerThread(8080)
   sst.setDaemon(True)
   sst.start()
