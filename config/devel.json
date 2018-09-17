@@ -4,8 +4,8 @@
   "utilsDir" : "../utils",
   "collDir" : "../collections",
   "subnet" : "192.168.20",
-  "collection" : "testSoundFile.json",
-  "tunings" : "full.json",
+  "collection" : "full.json",
+  "tunings" : "tunings.json",
   "hosts" : [
     {
       "ip" : "192.168.20.144", 
