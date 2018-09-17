@@ -181,19 +181,19 @@ def getSoundEntry():
 
 if __name__ == '__main__':
   config.load()
-  syslog.syslog "currentCollection: %s"%(getCurrentCollection()['desc'])
+  print "currentCollection: %s"%(getCurrentCollection()['desc'])
   for x in range(0,4):
-    syslog.syslog "choice %d"%(x)
+    print "choice %d"%(x)
     entry = getSoundEntry()
-    syslog.syslog entry
-    syslog.syslog
-    syslog.syslog
+    print entry
+    print
+    print
   setCurrentCollection("joyclouds.json")
-  syslog.syslog "currentCollection: %s"%(getCurrentCollection()['desc'])
+  print "currentCollection: %s"%(getCurrentCollection()['desc'])
   for x in range(0,4):
-    syslog.syslog "choice %d"%(x)
+    print "choice %d"%(x)
     entry = getSoundEntry()
-    syslog.syslog entry
-    syslog.syslog
-    syslog.syslog
+    print entry
+    print
+    print
 
