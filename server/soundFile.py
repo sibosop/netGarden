@@ -46,7 +46,7 @@ def setMaxEvents(m):
   test = int(m)
   if test > 0:
     maxEvents = test
-  if debug: print("setMaxEvents maxEvents:"+str(maxEvents))
+  if debug: syslog.syslog("setMaxEvents maxEvents:"+str(maxEvents))
   status = { 'status' : 'ok' }
   rval = json.dumps(status)
   return rval 
@@ -57,56 +57,56 @@ def getCurrentCollection():
 
 def getFileCollections():
   global fileCollections
-  if debug: print ("getFileCollections")
+  if debug: syslog.syslog ("getFileCollections")
   if fileCollections == None:
     fileCollections = {}
     collFiles = glob.glob(getCdir()+"/*.json")
-    if debug: print("collFiles:"+str(collFiles))
+    if debug: syslog.syslog("collFiles:"+str(collFiles))
     for cf in collFiles:
       n = cf.split("/")[-1]
-      if debug: print("collection file:"+n)
+      if debug: syslog.syslog("collection file:"+n)
       try:
-        if debug: print("reading:"+cf)
+        if debug: syslog.syslog("reading:"+cf)
         specs = None
         with open(cf) as f:
           fileCollections[n] = json.load(f)
-          #if debug: print ("n="+str(fileCollections[n]))
+          #if debug: syslog.syslog ("n="+str(fileCollections[n]))
       except IOError: 
-        print("can't open:"+cf);
+        syslog.syslog("can't open:"+cf);
     for k in fileCollections.keys():
-      if debug: print("collection: %s"%(fileCollections[k]['desc']))
+      if debug: syslog.syslog("collection: %s"%(fileCollections[k]['desc']))
       
 
 def getCollectionList():
   global fileList
   global fileCollections
-  if debug: print("getCollectionList")
+  if debug: syslog.syslog("getCollectionList")
   getFileCollections()
   collections = []
   for k in sorted(fileCollections.keys()):
-    if debug: print("found collection:"+str(k))
+    if debug: syslog.syslog("found collection:"+str(k))
     collections.append(k)
   status = { 'status' : 'ok' , 'collections' : collections }
   rval = json.dumps(status)
-  #if debug: print("getSoundList():"+rval)
+  #if debug: syslog.syslog("getSoundList():"+rval)
   return rval 
 
 def setCurrentCollection(col):
   global currentCollection
   global filecollections
   getFileCollections()
-  print("setting current collection to:"+col);
+  syslog.syslog("setting current collection to:"+col);
   status = { 'status' : 'ok' }
   if col in fileCollections.keys():
     currentCollection = col
   else:
     status['status'] = "fail"
   rval = json.dumps(status)
-  if debug: print("setCurrentCollection():"+rval)
+  if debug: syslog.syslog("setCurrentCollection():"+rval)
   return rval 
 
 def getRatios(tunings,name):
-  if debug: print("get tuning: %s"%(name))
+  if debug: syslog.syslog("get tuning: %s"%(name))
   rval = None
   if name in tunings:
     rval = []
@@ -125,11 +125,11 @@ def getSoundEntry():
   edir = getEdir()
   cc = fileCollections[currentCollection]
   sounds = cc['sounds']
-  if debug: print("current collection:"+cc['desc']+" number of sounds:"+str(len(sounds)))
+  if debug: syslog.syslog("current collection:"+cc['desc']+" number of sounds:"+str(len(sounds)))
   done = False
   choice = 0
   numChoices = random.randint(1,maxEvents)
-  if debug: print("current collection:"+cc['desc']+" number of choices:"+str(numChoices)+" max Events:"+str(maxEvents))
+  if debug: syslog.syslog("current collection:"+cc['desc']+" number of choices:"+str(numChoices)+" max Events:"+str(maxEvents))
   rval = []
   choiceList=[]
   while len(rval) < numChoices:
@@ -168,8 +168,8 @@ def getSoundEntry():
           else:
             sound[k] = t
     rval.append(sound)
-    if debug: print "len(rval) %d numChoices %d" % (len(rval),numChoices)
-  if debug: print("collection rval:"+str(rval))
+    if debug: syslog.syslog "len(rval) %d numChoices %d" % (len(rval),numChoices)
+  if debug: syslog.syslog("collection rval:"+str(rval))
   return rval
   
 
