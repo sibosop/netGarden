@@ -60,10 +60,10 @@ class playerThread(threading.Thread):
             if debug: syslog.syslog("skipping :"+ip)
             continue
           if host.isLocalHost(ip):
-            if debug: syslog.syslog("sending "+choice+" request to localhost("+ip+")")
+            if debug: syslog.syslog("sending %s request to localhost %"%(choice,ip))
             gardenTrack.setCurrentSound(choice)
           else:
-            if debug: syslog.syslog("sending "+choice+" request to "+ip)
+            if debug: syslog.syslog("sending %s request to localhost %"%(choice,ip))
             try:
               url = "http://"+ip+":8080"
               if debug: syslog.syslog("url:"+url)
