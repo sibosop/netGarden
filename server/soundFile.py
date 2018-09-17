@@ -22,6 +22,7 @@ listMutex=threading.Lock()
 maxEvents = 2
 
 fileCollections = None
+tunings = None
 
 Gedir = ""
 defaultKey = "full.json"
@@ -60,6 +61,7 @@ def getCurrentCollection():
 def getFileCollections():
   global fileCollections
   global currentCollection
+  global tunings
   if debug: syslog.syslog ("getFileCollections")
   if fileCollections == None:
     fileCollections = {}
@@ -72,7 +74,10 @@ def getFileCollections():
         if debug: syslog.syslog("reading:"+cf)
         specs = None
         with open(cf) as f:
-          fileCollections[n] = json.load(f)
+          if n == config.specs['tunings']:
+            tunings = json.load(f)
+          else:
+            fileCollections[n] = json.load(f)
           #if debug: syslog.syslog ("n="+str(fileCollections[n]))
       except IOError: 
         syslog.syslog("can't open:"+cf);
@@ -80,7 +85,12 @@ def getFileCollections():
       if debug: syslog.syslog("collection: %s"%(fileCollections[k]['desc']))
       
   if currentCollection == None:
-    currentCollection = fileCollections[defaultKey]
+    if "collection" in config.specs:
+      currentCollection = fileCollections[config.specs['collection']]
+    else:
+      currentCollection = fileCollections[defaultKey]
+      
+      
 
 def getCollectionList():
   global fileList
@@ -109,14 +119,35 @@ def setCurrentCollection(col):
   rval = json.dumps(status)
   if debug: syslog.syslog("setCurrentCollection():"+rval)
   return rval 
+  
+  
+etmps = {}
+def makeEtmp(c):
+  global etmps
+  if str(c) in etmps.keys():
+    return etmps[str(c)]
+    
+  if debug: syslog.syslog("makeEtmp:%d"%(c))
+  rval = []
+  for i in range(c): 
+    r = pow(2,float(i)/float(c))
+    if debug: syslog.syslog("makeEtmp r:%f"%(r))
+    rval.append(r)
+    etmps[str(c)] = rval
+  return rval
 
 def getRatios(tunings,name):
   if debug: syslog.syslog("get tuning: %s"%(name))
   rval = None
   if name in tunings:
     rval = []
-    for t in tunings[name]:
-      rval.append(eval(t))
+    spec = tunings[name]
+    if 'type' in spec:
+      if spec['type'] == "ratio":
+        for t in spec['data']:
+          rval.append(eval(t))
+      elif spec['type'] == "etmp":
+        rval = makeEtmp(spec['data'])
   return rval
 
 
@@ -126,6 +157,7 @@ def getSoundEntry():
   global currentCollection
   global fileCollections
   global eventFile
+  global tunings
   getFileCollections()
   edir = getEdir()
   cc = currentCollection
@@ -146,11 +178,11 @@ def getSoundEntry():
     for k in cc.keys():
       if k == 'sounds':
         continue
-      if k == 'tunings' or k == 'octaves':
+      if k == 'octaves':
         continue
       if k not in sound:
         if k == 'tuning':
-          t = getRatios(cc['tunings'],cc['tuning'])
+          t = getRatios(tunings,cc['tuning'])
           if t is not None:
             sound[k] = t
         if k == 'octave':
@@ -161,7 +193,7 @@ def getSoundEntry():
           sound[k] = cc[k]
     for k in sound.keys():
       if k == 'tuning':
-        t = getRatios(cc['tunings'],sound['tuning'])
+        t = getRatios(tunings,sound['tuning'])
         if t is None:
           del sound[k]
         else:

@@ -1,0 +1,13 @@
+{
+	"desc": "Test file for soundFile.py",
+	"sounds": [{
+  		"file": "plucksverbstretch.wav","tuning" : "etmp12"
+  	}, {
+  		"file": "bd1.wav","tuning" : "etmp12"
+  	}, {
+  		"file": "harm1.wav","tuning" : "etmp24"
+  	}, {
+  		"file": "pianotrack-23.wav","tuning" : "etmp24"
+  	}
+  ]
+}

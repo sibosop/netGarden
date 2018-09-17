@@ -77,23 +77,18 @@ def getCurrentSound():
 
 
 defOctaves = [0.25,0.5,1.0,2.0,4.0]
-speedChangeMax = 4.0
-speedChangeMin = .25
-
 def getFactor(spec):
   rval = 1.0
   if 'tuning' in spec:
     if debug: syslog.syslog("tuning:"+str(spec['tuning']))
     rval = random.choice(spec['tuning'])
-    if 'octave' in spec:
-      rval *= random.choice(spec['octave'])
-    else:
-      rval *= random.choice(defOctaves)
-  elif 'range' in spec:
-    rval = ((spec['range'][1]-spec['range'][0]) * random.random()) + spec['range'][0]
   else:
     if debug: syslog.syslog("default tuning")
-    rval = ((speedChangeMax-speedChangeMin) * random.random()) + speedChangeMin
+    rval = (2.0 * random.random()) + 1.0
+  if 'octave' in spec:
+    rval *= random.choice(spec['octave'])
+  else:
+    rval *= random.choice(defOctaves)
   syslog.syslog("factor:"+str(rval))
   return rval
 
