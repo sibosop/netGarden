@@ -53,6 +53,8 @@ def setMaxEvents(m):
 
 def getCurrentCollection():
   global currentCollection
+  if debug: syslog.syslog ("getCurrentCollection")
+  getFileCollections()
   return currentCollection
 
 def getFileCollections():
