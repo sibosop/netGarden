@@ -168,7 +168,7 @@ def getSoundEntry():
           else:
             sound[k] = t
     rval.append(sound)
-    if debug: syslog.syslog "len(rval) %d numChoices %d" % (len(rval),numChoices)
+    if debug: syslog.syslog ("len(rval) %d numChoices %d" % (len(rval),numChoices))
   if debug: syslog.syslog("collection rval:"+str(rval))
   return rval
   
