@@ -54,7 +54,7 @@ You still need to enable ssh from the terminal using
   * `crontab -e`
   * add these lines
    * `MAILTO=""`
-   * `@reboot sleep 60; /home/pi/GitProjects/netGarden/server/gardenWrap.sh`
+   * `@reboot sleep 10; /home/pi/GitProjects/netGarden/server/gardenWrap.sh`
    * `@reboot /home/pi/GitProjects/netGarden/utils/asoundConfig.py`
  * with any luck the system will start after reboot
  * unclutter removes cursor. You may need to run unclutter -display :0.0 once
