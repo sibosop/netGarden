@@ -86,8 +86,6 @@ class soundServer(BaseHTTPServer.HTTPServer):
       ,'Upgrade'  : self.doUpgrade
       ,'Auto'     : self.setPlayMode
       ,'Manual'   : self.setPlayMode
-      ,'Refresh'  : self.doRefresh
-      ,'Rescan'   : self.doRescan
       ,'CollectionList': self.doCollectionList
       ,'Collection' : self.doCollection
       ,'PhraseScatter' : self.doPhraseScatter
