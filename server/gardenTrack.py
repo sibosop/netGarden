@@ -84,7 +84,7 @@ def getFactor(spec):
   rval = 1.0
   if 'tuning' in spec:
     if debug: syslog.syslog("tuning:"+str(spec['tuning']))
-    rval = random.chose(spec['tuning'])
+    rval = random.choice(spec['tuning'])
     if 'octave' in spec:
       rval *= random.choice(spec['octave'])
     else:
