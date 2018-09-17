@@ -246,8 +246,8 @@ class soundServer(BaseHTTPServer.HTTPServer):
     state['auto'] = player.isEnabled() 
     isMasterFlag =host.getLocalAttr('isMaster')
     if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
-    if garden.isMasterFlag:
-      state['collection'] = soundFile.getCurrentCollection()
+    if isMasterFlag:
+      state['collection'] = soundFile.getCurrentCollection()['desc']
       state['maxEvents'] = soundFile.maxEvents
     else:
       state['collection'] = ""
