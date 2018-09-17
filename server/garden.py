@@ -23,11 +23,6 @@ numGardenThreads=1
 gardenExit = 0
 isMasterFlag = False;
 
-def isMaster():
-  global isMasterFlag
-  if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
-  return isMasterFlag
-
 eventThreads=[]
 def startEventThread(t):
   global eventThreads

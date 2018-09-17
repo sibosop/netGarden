@@ -219,7 +219,9 @@ class soundServer(BaseHTTPServer.HTTPServer):
 
   def setPlayMode(self,cmd):
     rval = jsonStatus("not_master")
-    if garden.isMaster():
+    isMasterFlag =host.getLocalAttr('isMaster')
+    if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
+    if garden.isMasterFlag:
       player.enable(cmd['cmd'] == "Auto")
       rval = jsonStatus("ok")
     return rval
@@ -228,7 +230,9 @@ class soundServer(BaseHTTPServer.HTTPServer):
     state = {}
     state['status'] = "ok"
     state['vol'] = asoundConfig.getVolume()
-    state['isMaster'] = garden.isMaster()
+    isMasterFlag =host.getLocalAttr('isMaster')
+    if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
+    state['isMaster'] = isMasterFlag
     state['sound'] = gardenTrack.getCurrentSound()
     phrase = ""
     phraseArg = gardenSpeak.getCurrentPhrase()
@@ -240,7 +244,9 @@ class soundServer(BaseHTTPServer.HTTPServer):
     state['threads'] = len(gardenTrack.eventThreads)
     state['speaker'] = asoundConfig.getHw()['SpeakerBrand']
     state['auto'] = player.isEnabled() 
-    if garden.isMaster():
+    isMasterFlag =host.getLocalAttr('isMaster')
+    if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
+    if garden.isMasterFlag:
       state['collection'] = soundFile.getCurrentCollection()
       state['maxEvents'] = soundFile.maxEvents
     else:
