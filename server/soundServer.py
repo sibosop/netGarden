@@ -215,7 +215,7 @@ class soundServer(BaseHTTPServer.HTTPServer):
   def doUpgrade(self,cmd):
     upgrade.upgrade()
     syslog.syslog("returned from upgrade")
-    return jsonStatus("ok")
+    return jsonStatus("restart")
 
   def setPlayMode(self,cmd):
     rval = jsonStatus("not_master")
