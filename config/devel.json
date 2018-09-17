@@ -8,8 +8,88 @@
   "tunings" : "tunings.json",
   "hosts" : [
     {
-      "ip" : "192.168.20.144", 
+      "isMaster": false,
+      "name": "pi100",
+      "ip": "192.168.20.100",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi101",
+      "ip": "192.168.20.101",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi102",
+      "ip": "192.168.20.102",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi103",
+      "ip": "192.168.20.103",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi104",
+      "ip": "192.168.20.104",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi105",
+      "ip": "192.168.20.105",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi106",
+      "ip": "192.168.20.106",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": false
+    },
+    {
+      "isMaster": false,
+      "name": "pi107",
+      "ip": "192.168.20.107",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": true
+    },
+    {
+      "isMaster": false,
+      "name": "pi111",
+      "ip": "192.168.20.111",
+      "hasAudio": true,
+      "hasMusic": false,
+      "hasScreen": true
+    },
+    {
+      "isMaster": false,
+      "name": "pi112",
+      "ip": "192.168.20.112",
+      "hasAudio": true,
+      "hasMusic": true,
+      "hasScreen": true
+    },
+    {
       "name": "devel144", 
+      "ip" : "192.168.20.144", 
       "isMaster" : true, 
       "hasAudio" : true,
       "hasScreen" : true,
@@ -17,8 +97,8 @@
       "displayEnabled" : true 
     },
     {
+      "name": "devel114",
       "ip" : "192.168.20.108", 
-      "name": "devel114", 
       "isMaster" : false, 
       "hasAudio" : true,
       "hasScreen" : true,
