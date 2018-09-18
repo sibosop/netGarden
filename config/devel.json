@@ -81,8 +81,8 @@
     },
     {
       "isMaster": false,
-      "name": "pi112",
-      "ip": "192.168.20.112",
+      "name": "pi110",
+      "ip": "192.168.20.110",
       "hasAudio": true,
       "hasMusic": true,
       "hasScreen": true
