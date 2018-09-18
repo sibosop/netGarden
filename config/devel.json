@@ -1,11 +1,11 @@
 {
-  "masterVolume" : 30,
+  "masterVolume" : 40,
   "soundMaxVol" : 0.5,
   "eventDir" : "/media/pi/SOUND/events/",
   "utilsDir" : "../utils",
   "collDir" : "../collections",
   "subnet" : "192.168.20",
-  "collection" : "full.json",
+  "collection" : "joyclouds.json",
   "tunings" : "tunings.json",
   "hosts" : [
     {
