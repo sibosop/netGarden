@@ -73,10 +73,10 @@
     },
     {
       "isMaster": false,
-      "name": "pi111",
-      "ip": "192.168.20.111",
+      "name": "pi109",
+      "ip": "192.168.20.109",
       "hasAudio": true,
-      "hasMusic": false,
+      "hasMusic": true,
       "hasScreen": true
     },
     {
