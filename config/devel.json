@@ -1,6 +1,6 @@
 {
   "masterVolume" : 30,
-  "soundMaxVol" : .5,
+  "soundMaxVol" : 0.5,
   "eventDir" : "/media/pi/SOUND/events/",
   "utilsDir" : "../utils",
   "collDir" : "../collections",
