@@ -17,6 +17,7 @@ import config
 import argparse
 import host
 import subprocess
+from asoundConfig import setVolume
 
 debug = True
 numGardenThreads=1
@@ -46,6 +47,8 @@ if __name__ == '__main__':
   except Exception, e:
     syslog.syslog("config error:"+str(e))
     exit(5)
+  if "masterVolume" in config.specs:
+    setVolume(config.specs['masterVolume'])
   isMasterFlag =host.getLocalAttr('isMaster')
   if debug: syslog.syslog("isMaster: %s"%(isMasterFlag))
   sst = soundServer.soundServerThread(8080)
