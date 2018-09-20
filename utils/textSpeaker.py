@@ -53,23 +53,23 @@ def makeSpeakFile(line,language=''):
       return rval
     fnameRoot = "../tmp/" + re.sub('\W+','_',line)
     if config.internetOn() and language != "es":
-      #if debug: syslog.syslog("speak: internet on using gTTS");
-      #if debug: syslog.syslog("playText line:"+line)
+      if debug: syslog.syslog("speak: internet on using gTTS");
+      if debug: syslog.syslog("playText line:"+line)
       fname = fnameRoot + ".mp3"
-      #if debug: syslog.syslog("speak:"+fname)
+      if debug: syslog.syslog("speak:"+fname)
       tts1=gTTS(text=line,lang=language)
       tts1.save(fname)
-      #if debug: syslog.syslog("speak:"+fname)
+      if debug: syslog.syslog("speak:"+fname)
       sound = AudioSegment.from_mp3(fname)
       os.unlink(fname)
       fname = fnameRoot + ".wav"
-      #if debug: syslog.syslog("speak:"+fname)
+      if debug: syslog.syslog("speak:"+fname)
       sound.export(fname, format="wav")
       rval = fname
     else:
       syslog.syslog("speak: internet off using espeak");
       fname = fnameRoot + ".wav"
-      #if debug: syslog.syslog("speak:"+fname)
+      if debug: syslog.syslog("speak:"+fname)
       os.system("espeak -w "+fname+" '"+line+"'")
       rval = fname
     convertSampleRate(rval)

@@ -13,6 +13,8 @@ import json
 import argparse
 import config
 import readline
+import select
+import time
 
 debug=True
 
@@ -119,8 +121,46 @@ def doQuit(args):
   print "bye"
   readline.write_history_file()
   return -1
+  
+def kbfunc(): 
+  i,o,e = select.select([sys.stdin],[],[],0.0001)
+  for s in i:
+     if s == sys.stdin:
+         input = sys.stdin.readline()
+         return True
+  return False
+  
+def doTest(args):
+  print "Hit return to stop test"
+  hosts = host.getHosts()
+  loop = True
+  while loop:
+    for h in hosts:
+      vs = h['ip'].split(".")
+      cmd = []
+      cmd.append("Phrase")
+      cmd.append("%s"%(vs[3]))
+      cmd.append("-r")
+      cmd.append("0")
+      cmd.append("-s")
+      cmd.append("%s"%(vs[3]))
+      stop = "Phrase -s %s"%(vs[3])
+      print "host %s sub %s cmd %s"%(h['ip'],vs[3],cmd)
+      doPhrase(cmd)
+      for i in range(5):
+        if kbfunc():
+          loop = False
+          break
+        time.sleep(1)
+      cmd = []
+      cmd.append("Phrase")
+      cmd.append("-s")
+      cmd.append("%s"%(vs[3]))
+      doPhrase(cmd)
+      
+    
 
-
+   
 def printCmds(cmd):
   print "SchlubCmds:"
   for c in cmds:
@@ -128,22 +168,23 @@ def printCmds(cmd):
   print
 
 cmds = {
-      'Probe'     : doCmd
-      ,'Play' : doPlay
-      ,'Show'     : doShow
-      ,'Volume'   : doNum
-      ,'Phrase'   : doPhrase
-      ,'Threads'  : doNum
-      ,'Poweroff' : doCmd
-      ,'Reboot'   : doCmd
-      ,'Upgrade'  : doCmd
-      ,'MaxEvents' : doNum
-      ,'SoundVol': doNum
-      ,'CollectionList' : doMasterCmd
-      ,'Collection' : doMasterArg
-      ,'Quit' : doQuit
-      ,'Help' : printCmds
-    }
+  'Collection'      : doMasterArg
+  ,'CollectionList' : doMasterCmd
+  ,'Help'           : printCmds
+  ,'MaxEvents'      : doNum
+  ,'Phrase'         : doPhrase
+  ,'Play'           : doPlay
+  ,'Poweroff'       : doCmd
+  ,'Probe'          : doCmd
+  ,'Quit'           : doQuit
+  ,'Reboot'         : doCmd
+  ,'Show'           : doShow
+  ,'SoundVol'       : doNum
+  ,'Test'           : doTest
+  ,'Threads'        : doNum
+  ,'Upgrade'        : doCmd
+  ,'Volume'         : doNum
+}
 
 
 def completer(text, state):
