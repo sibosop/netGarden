@@ -139,7 +139,8 @@ class gardenSpeakThread(threading.Thread):
           oldPhrase = phrase
           path = textSpeaker.makeSpeakFile(phrase,lang)
           if path is None:
-            syslog.syslog("conversion of "+phrase+" failed")
+            syslog.syslog("conversion of "+phrase+" failed if getting group attr error then google is at fault")
+            clearCurrentPhrase()
             time.sleep(1)
             continue
           if debug: syslog.syslog(self.name+": playing "+path)
