@@ -5,7 +5,7 @@
   "utilsDir" : "../utils",
   "collDir" : "../collections",
   "subnet" : "192.168.20",
-  "collection" : "joyclouds.json",
+  "collection" : "full.json",
   "tunings" : "tunings.json",
   "hosts" : [
     {
