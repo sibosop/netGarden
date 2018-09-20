@@ -40,13 +40,20 @@ def convertSampleRate(fname):
   wf.writeframes(converted[0])
   wf.close()
 
+def doEspeak(fnameRoot, line):
+  syslog.syslog("speak: using espeak");
+  fname = fnameRoot + ".wav"
+  if debug: syslog.syslog("speak:"+fname)
+  os.system("espeak -w "+fname+" '"+line+"'")
+  rval = fname
+  return rval
 
 def makeSpeakFile(line,language=''):
   rval = None 
   if language == '':
     language  = 'en-us'
   if debug: syslog.syslog("make speak file:"+line+" lang:"+str(language))
-
+  fnameRoot = ""
   try:
     if host.getLocalAttr('hasAudio') is False:
       #if debug: syslog.syslog("speak: no audio");
@@ -67,15 +74,11 @@ def makeSpeakFile(line,language=''):
       sound.export(fname, format="wav")
       rval = fname
     else:
-      syslog.syslog("speak: internet off using espeak");
-      fname = fnameRoot + ".wav"
-      if debug: syslog.syslog("speak:"+fname)
-      os.system("espeak -w "+fname+" '"+line+"'")
-      rval = fname
-    convertSampleRate(rval)
+      rval = doEspeak(fnameRoot,line)
   except Exception as e:
     syslog.syslog("speak error: "+ str(e))
-    rval = None
+    rval = doEspeak(fnameRoot,line)
+  convertSampleRate(rval)
   return rval
 
 
