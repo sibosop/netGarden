@@ -147,16 +147,17 @@ def doTest(args):
       stop = "Phrase -s %s"%(vs[3])
       print "host %s sub %s cmd %s"%(h['ip'],vs[3],cmd)
       doPhrase(cmd)
-      for i in range(5):
-        if kbfunc():
-          loop = False
-          break
-        time.sleep(1)
+      i,o,e = select.select([sys.stdin],[],[],5)
       cmd = []
       cmd.append("Phrase")
       cmd.append("-s")
       cmd.append("%s"%(vs[3]))
       doPhrase(cmd)
+      if len(i):
+        loop = False
+        input = sys.stdin.readline()
+        break
+      
       
     
 
