@@ -90,8 +90,15 @@ def sendWithSubnet(ip,cmd):
     sendToHost(h,cmd)
 
 def sendToHosts(cmd):
+  save = None
   for h in hosts:
-    sendToHost(h['ip'],cmd)
+    ip = h['ip']
+    if isLocalHost(ip):
+      save = ip
+    else:
+      sendToHost(h['ip'],cmd)
+  if save is not None:
+    sendToHost(save,cmd)
     
 def jsonStatus(s):
   d = {}
